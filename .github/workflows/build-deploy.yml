@@ -5,7 +5,7 @@ on: [pull_request]
 
 
 jobs:
-  buildImage:
+  CI:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,4 +18,4 @@ jobs:
         run: npm i
 
       - name: Build
-        run: nx build
+        run: npx nx run-many -t build
