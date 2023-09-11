@@ -1,0 +1,27 @@
+
+name: Build-Deploy
+
+on: [pull_request]
+
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - uses: nrwl/nx-set-shas@v3
+      - name: Build
+        run: npm ci
+
+      - name: Build
+        if: contains(github.event.pull_request.body, '[apps:')
+        shell: bash
+        run: |
+          NS=$(echo '${{github.event.head_commit.message}}' '${{ github.event.pull_request.body }}' | awk -F"apps:" '{ print $2}' | awk -F"]" '{ print $1}' | xargs)
+          npx nx run-many -t build --projects=$NS
