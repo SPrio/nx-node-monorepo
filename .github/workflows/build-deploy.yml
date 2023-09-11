@@ -19,4 +19,8 @@ jobs:
       - run: npm ci
 
       - name: Build
-        run: npx nx affected:build
+        if: contains(github.event.pull_request.body, '[apps:')
+        shell: bash
+        run: |
+          NS=$(echo '${{github.event.head_commit.message}}' '${{ github.event.pull_request.body }}' | awk -F"apps:" '{ print $2}' | awk -F"]" '{ print $1}' | xargs)
+          npx nx run-mant -t build --projects=$NS
