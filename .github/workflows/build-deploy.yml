@@ -16,7 +16,8 @@ jobs:
         with:
           node-version: '14'
       - uses: nrwl/nx-set-shas@v3
-      - run: npm ci
+      - name: Build
+        run: npm ci
 
       - name: Build
         if: contains(github.event.pull_request.body, '[apps:')
